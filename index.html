@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olivia's 23 - Rodeo Glam</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fuentes: Rye para estilo Western, Great Vibes para elegancia, Montserrat para lectura -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;800&family=Rye&family=Sancreek&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --leather-black: #140b07; /* Casi negro/café muy oscuro */
+            --leather-dark: #29150b; /* Café chocolate profundo */
+            --leather-mid: #4a2712; /* Café montura */
+            --copper-rust: #c06c30; /* Cobre / Óxido elegante */
+            --copper-light: #e69d65;
+            --parchment: #f2e6d8; /* Color pergamino/papel viejo */
+            --parchment-dark: #d6c6b3;
+            --wood: #1f1107;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--leather-black);
+            color: var(--parchment);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        #desert-dust-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        #horses-container {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 3;
+            opacity: 0.4;
+        }
+
+        #falling-stetsons-container {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 15;
+        }
+
+        .full-bleed-page {
+            width: 100vw;
+            max-width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Textura base de Cuero/Madera para la página */
+        .texture-bg {
+            background-color: var(--leather-dark);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(192, 108, 48, 0.15), transparent 60%),
+                linear-gradient(rgba(20, 11, 7, 0.9), rgba(20, 11, 7, 0.95));
+        }
+
+        .hero-section {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 5vw;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(74, 39, 18, 0.6) 0%, var(--leather-black) 80%);
+            border-bottom: 4px dashed var(--copper-rust);
+        }
+
+        .western-pretitle {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            font-size: 0.85rem;
+            color: var(--copper-light);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .western-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(5rem, 15vw, 9rem);
+            color: var(--parchment);
+            line-height: 0.9;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.8), 0 0 25px rgba(192, 108, 48, 0.5);
+            margin: 10px 0;
+            z-index: 5;
+            transform: rotate(-3deg);
+        }
+
+        .badge-23 {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--leather-mid);
+            border-radius: 50%;
+            border: 2px dashed var(--copper-light);
+            box-shadow: 0 0 0 6px var(--leather-dark), 0 10px 25px rgba(0,0,0,0.9);
+            z-index: 5;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .badge-23:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .badge-23 span {
+            font-family: 'Rye', cursive;
+            font-size: 4rem;
+            color: var(--parchment);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .date-rodeo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            font-family: 'Rye', cursive;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: var(--copper-light);
+            z-index: 5;
+        }
+
+        .date-rodeo .star {
+            font-size: 1rem;
+            color: var(--parchment);
+        }
+
+        .music-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            background: var(--leather-mid);
+            border: 2px dashed var(--copper-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            transition: transform 0.3s;
+        }
+
+        .music-btn:hover { transform: scale(1.1); }
+        .music-btn.playing { box-shadow: 0 0 20px rgba(192, 108, 48, 0.8); }
+
+        .note-icon { font-size: 1.5rem; }
+
+        .fx-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 40px;
+            z-index: 5;
+        }
+
+        .btn-western {
+            background: var(--leather-dark);
+            border: 1px solid var(--copper-rust);
+            color: var(--parchment);
+            padding: 10px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 5px 10px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+        }
+
+        .btn-western:hover, .btn-western:active {
+            background: var(--copper-rust);
+            color: var(--leather-black);
+            transform: translateY(-2px);
+            box-shadow: inset 0 0 0 rgba(0,0,0,0), 0 8px 15px rgba(192, 108, 48, 0.4);
+        }
+
+        .btn-stampede {
+            background: #a82e18;
+            border-color: #ff5e3a;
+            color: #fff;
+        }
+
+        .btn-stampede:hover {
+            background: #ff5e3a;
+            color: #290b05;
+            box-shadow: inset 0 0 0 rgba(0,0,0,0), 0 8px 25px rgba(255, 94, 58, 0.6);
+        }
+
+        .section {
+            padding: 80px 5vw;
+            width: 100%;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Rye', cursive;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: var(--copper-light);
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .count-plank {
+            background: linear-gradient(to bottom, #3a2012, #1f1107);
+            border: 2px solid #54311c;
+            border-radius: 8px;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        
+        .count-plank::before, .count-plank::after {
+            content: ''; position: absolute; width: 6px; height: 6px; 
+            background: #111; border-radius: 50%; top: 10px; box-shadow: 0 1px 1px rgba(255,255,255,0.2);
+        }
+        .count-plank::before { left: 10px; }
+        .count-plank::after { right: 10px; }
+
+        .count-plank span {
+            display: block;
+            font-family: 'Rye', cursive;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            color: var(--parchment);
+        }
+
+        .count-plank p {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--copper-rust);
+            margin-top: 5px;
+            font-weight: 800;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .photo-polaroid {
+            background: var(--parchment);
+            padding: 15px 15px 40px 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            transform: rotate(-2deg);
+            transition: transform 0.4s ease;
+            position: relative;
+        }
+        
+        .photo-polaroid:nth-child(even) { transform: rotate(3deg); }
+        .photo-polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 5; }
+
+        .photo-polaroid img {
+            width: 100%;
+            height: auto;
+            border: 1px solid rgba(0,0,0,0.1);
+            filter: sepia(0.3) contrast(1.1);
+        }
+
+        .tape {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            width: 100px;
+            height: 25px;
+            background: rgba(220, 210, 190, 0.7);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .locations-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .location-leather-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--leather-dark);
+            border: 2px solid var(--leather-mid);
+            border-radius: 12px;
+            padding: 35px 25px;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 15px 30px rgba(0,0,0,0.7);
+        }
+        
+        .location-leather-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px dashed var(--copper-rust);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .loc-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; }
+        
+        .location-leather-card h4 {
+            font-family: 'Rye', cursive;
+            font-size: 1.5rem;
+            color: var(--copper-light);
+            margin-bottom: 10px;
+        }
+
+        .location-leather-card p {
+            font-size: 0.9rem;
+            color: var(--parchment-dark);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .stampede-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 3px, 0) rotate(-1deg); }
+            20%, 80% { transform: translate3d(3px, -2px, 0) rotate(1deg); }
+            30%, 50%, 70% { transform: translate3d(-5px, 5px, 0) rotate(-2deg); }
+            40%, 60% { transform: translate3d(5px, -5px, 0) rotate(2deg); }
+        }
+
+        .running-horse {
+            position: absolute;
+            will-change: transform;
+            /* Secreto de diseño: Usamos el emoji pero lo convertimos en silueta sólida con sombras */
+            font-size: 180px;
+            color: transparent;
+            text-shadow: 0 0 0 var(--leather-black);
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.9));
+        }
+
+        @keyframes runRight {
+            0% { transform: translateX(-200px) translateY(0) scale(1); }
+            100% { transform: translateX(110vw) translateY(30px) scale(0.85); }
+        }
+
+        @keyframes runLeft {
+            0% { transform: translateX(110vw) translateY(0) scale(1) scaleX(-1); }
+            100% { transform: translateX(-200px) translateY(-30px) scale(0.85) scaleX(-1); }
+        }
+
+        .trail-timeline {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-left: 40px;
+        }
+
+        .trail-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: repeating-linear-gradient(
+                -45deg,
+                #c06c30,
+                #c06c30 4px,
+                #8a491d 4px,
+                #8a491d 8px
+            );
+            border-radius: 4px;
+        }
+
+        .trail-stop {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .trail-stop::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: var(--parchment);
+            border: 4px solid var(--leather-mid);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .trail-time {
+            font-family: 'Rye', cursive;
+            color: var(--copper-light);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .trail-desc {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-left: 3px solid var(--copper-rust);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .wanted-poster {
+            background: var(--parchment);
+            color: var(--leather-black);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            border: 2px solid #b5a28c;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            position: relative;
+            text-align: center;
+        }
+
+        .wanted-poster::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 50px rgba(100, 70, 40, 0.4);
+            pointer-events: none;
+        }
+
+        .wanted-title {
+            font-family: 'Rye', cursive;
+            font-size: 3rem;
+            color: #3d2212;
+            text-transform: uppercase;
+            border-bottom: 3px double #3d2212;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .wanted-text {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .form-western input, .form-western select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #3d2212;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: #3d2212;
+            outline: none;
+        }
+        
+        .form-western input::placeholder { color: rgba(61, 34, 18, 0.5); }
+
+        .btn-stamp {
+            background: transparent;
+            border: 3px solid #751a13;
+            color: #751a13;
+            font-family: 'Rye', cursive;
+            font-size: 1.5rem;
+            padding: 10px 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transform: rotate(-3deg);
+            transition: all 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn-stamp:hover {
+            background: #751a13;
+            color: var(--parchment);
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-section { padding: 40px 2vw; }
+            .western-title { font-size: 4rem; }
+            .wanted-poster { padding: 30px 15px; }
+            .running-horse { font-size: 110px; }
+        }
+    </style>
+</head>
+<body class="texture-bg">
+
+    <!-- Audio Oculto -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="micancionxv.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Canvas de Polvo del Desierto y Chispas -->
+    <canvas id="desert-dust-canvas"></canvas>
+
+    <!-- Contenedor para caballos galopando en el fondo -->
+    <div id="horses-container"></div>
+
+    <!-- Contenedor para sombreros cayendo desde arriba -->
+    <div id="falling-stetsons-container"></div>
+
+    <!-- Botón Música Flotante -->
+    <div class="music-btn" id="music-btn" onclick="toggleMusic()">
+        <span class="note-icon">🎵</span>
+    </div>
+
+    <div class="full-bleed-page">
+
+        <header class="hero-section">
+            <p class="western-pretitle">Ensillen sus caballos, están invitados al rodeo de</p>
+            <h1 class="western-title">Olivia</h1>
+            
+            <div class="badge-23" onclick="tossFallingHats(5)">
+                <span>23</span>
+            </div>
+
+            <div class="date-rodeo">
+                <span>OCT 30</span>
+                <span class="star">★</span>
+                <span>04:00 PM</span>
+            </div>
+            <p style="margin-top: 15px; color: var(--parchment-dark); font-size: 0.9rem; z-index: 5;">Dress code: Vaquero Glam (Botas & Brillos)</p>
+
+            <div class="fx-bar">
+                <button type="button" class="btn-western" onclick="tossFallingHats(8)">🤠 Lluvia de Sombreros</button>
+                <button type="button" class="btn-western" onclick="burstCampfireSparks()">🔥 Chispas de Fogata</button>
+                <button type="button" class="btn-western btn-stampede" onclick="triggerStampede()">🐎 ¡Estampida!</button>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">Faltan pa' la fiesta</h2>
+            <div class="countdown-grid">
+                <div class="count-plank"><span id="days">00</span><p>Días</p></div>
+                <div class="count-plank"><span id="hours">00</span><p>Hrs</p></div>
+                <div class="count-plank"><span id="minutes">00</span><p>Min</p></div>
+                <div class="count-plank"><span id="seconds">00</span><p>Seg</p></div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Memorias del Rancho</h2>
+            <div class="gallery-grid">
+                <div class="photo-polaroid">
+                    <div class="tape"></div>
+                    <img src="foto1xv.jpeg" alt="Olivia Vaquera" onerror="this.src='https://placehold.co/400x500/29150b/f2e6d8?text=Foto+1'">
+                </div>
+                <div class="photo-polaroid">
+                    <div class="tape"></div>
+                    <img src="foto2xv.jpeg" alt="Estilo Rodeo" onerror="this.src='https://placehold.co/400x500/29150b/f2e6d8?text=Foto+2'">
+                </div>
+                <div class="photo-polaroid">
+                    <div class="tape"></div>
+                    <img src="foto3xv.jpeg" alt="Cowgirl Glam" onerror="this.src='https://placehold.co/400x500/29150b/f2e6d8?text=Foto+3'">
+                </div>
+                <div class="photo-polaroid">
+                    <div class="tape"></div>
+                    <img src="foto4xv.jpeg" alt="Botas y Sombrero" onerror="this.src='https://placehold.co/400x500/29150b/f2e6d8?text=Foto+4'">
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">El Cuartel General</h2>
+            <div class="locations-container">
+                <div class="location-leather-card">
+                    <span class="loc-icon">⛪</span>
+                    <h4>Misa Bendición</h4>
+                    <p><strong>Parroquia del Viejo Pueblo</strong><br>Av. de los Caballos #123, Centro Viejo, CP 54000.</p>
+                    <a href="#" class="btn-western" style="text-decoration:none;">📍 Ver Mapa</a>
+                </div>
+                
+                <div class="location-leather-card">
+                    <span class="loc-icon">🐴</span>
+                    <h4>El Gran Rancho (Fiesta)</h4>
+                    <p><strong>Hacienda Los Fresnos</strong><br>Camino de terracería Km 5, Valle Dorado, CP 54100.</p>
+                    <a href="#" class="btn-western" style="text-decoration:none;">📍 Ver Mapa</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">El Recorrido</h2>
+            <div class="trail-timeline">
+                <div class="trail-stop">
+                    <div class="trail-time">04:00 PM</div>
+                    <div class="trail-desc">Llegada al rancho y bebidas de bienvenida (Cervezas y Tequila).</div>
+                </div>
+                <div class="trail-stop">
+                    <div class="trail-time">06:00 PM</div>
+                    <div class="trail-desc">Comida estilo parrillada texana y música country en vivo.</div>
+                </div>
+                <div class="trail-stop">
+                    <div class="trail-time">08:00 PM</div>
+                    <div class="trail-desc">El gran brindis, partida de pastel y baile sorpresa.</div>
+                </div>
+                <div class="trail-stop">
+                    <div class="trail-time">10:00 PM</div>
+                    <div class="trail-desc">¡Se abre la pista! Baile de botas y sombreros hasta amanecer.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wanted-poster">
+                <h3 class="wanted-title">Se Busca</h3>
+                <p class="wanted-text">TU PRESENCIA EN LA CUADRILLA<br><span style="font-size:0.8rem; font-weight:400;">(Si deseas dar un presente, habrá un cofre de tesoros / Lluvia de sobres en la entrada)</span></p>
+                
+                <form class="form-western" id="rsvpForm">
+                    <input type="text" name="Nombre" placeholder="Tu Nombre o Apodo" required>
+                    <input type="tel" name="Telefono" placeholder="Número de Teléfono" required>
+                    <select name="Boletos" required>
+                        <option value="" disabled selected>Caballos/Personas en tu carreta</option>
+                        <option value="1">Voy solo (1 persona)</option>
+                        <option value="2">Pareja (2 personas)</option>
+                        <option value="3">Familia (3 personas)</option>
+                        <option value="4">Tropa (4 personas)</option>
+                    </select>
+                    <button type="submit" class="btn-stamp">Confirmar</button>
+                </form>
+                <div id="rsvp-success" style="display:none; color: #751a13; font-weight:800; font-size:1.5rem; margin-top:20px;">
+                    ¡REGISTRADO EN LA LISTA!
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        /* MÚSICA */
+        const audio = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+        let audioInit = false;
+
+        function startAudio() {
+            if (audioInit || !audio) return;
+            audio.currentTime = 55;
+            audio.play().then(() => {
+                audioInit = true;
+                musicBtn.classList.add('playing');
+            }).catch(() => {});
+        }
+
+        ['click', 'scroll', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, startAudio, { once: true, passive: true });
+        });
+
+        function toggleMusic() {
+            if (!audioInit) { audio.currentTime = 55; audioInit = true; }
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.add('playing');
+            } else {
+                audio.pause();
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        /* CUENTA REGRESIVA */
+        const eventDate = new Date("Oct 30, 2026 16:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = eventDate - now;
+            if(diff > 0) {
+                document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+            }
+        }, 1000);
+
+        /* ANIMACIONES: CABALLOS EN EL FONDO */
+        const horsesContainer = document.getElementById('horses-container');
+        
+        function spawnHorse(isStampede = false) {
+            if(!horsesContainer) return;
+            const horse = document.createElement('div');
+            horse.className = 'running-horse';
+            // Usamos el emoji text-shadow hack para crear una silueta vectorial perfecta sin cargar imágenes
+            horse.innerText = '🐎';
+            
+            const isLeft = Math.random() > 0.5;
+            const duration = isStampede ? (Math.random() * 1.5 + 2) : (Math.random() * 8 + 10);
+            
+            horse.style.top = (Math.random() * 65 + 15) + 'vh';
+            
+            if (isLeft) {
+                horse.style.animation = `runRight ${duration}s linear forwards`;
+            } else {
+                horse.style.animation = `runLeft ${duration}s linear forwards`;
+            }
+
+            horsesContainer.appendChild(horse);
+            setTimeout(() => horse.remove(), duration * 1000);
+        }
+
+        // Generar caballos casuales en el fondo
+        setInterval(() => spawnHorse(), 5500);
+        setTimeout(() => spawnHorse(), 1000);
+
+        /* ANIMACIONES: ESTAMPIDA SORPRESA */
+        function triggerStampede() {
+            // Sacudir la pantalla
+            document.body.classList.add('stampede-shake');
+            
+            // Explosión masiva de polvo
+            burstCampfireSparks();
+            for(let i=0; i<60; i++) {
+                setTimeout(() => particles.push(createParticle(false)), i * 15);
+            }
+
+            // Manada de caballos
+            for(let i=0; i<15; i++) {
+                setTimeout(() => spawnHorse(true), i * 180);
+            }
+
+            // Quitar el temblor después de unos segundos
+            setTimeout(() => {
+                document.body.classList.remove('stampede-shake');
+            }, 3000);
+        }
+
+
+        /* ANIMACIONES: SOMBREROS VAQUEROS CAYENDO */
+        const hatContainer = document.getElementById('falling-stetsons-container');
+
+        // SVG de sombrero tipo Stetson (Café oscuro)
+        const cowboyHatSVG = `
+            <svg width="100" height="70" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 45 C40 10, 50 15, 60 15 C70 15, 80 10, 80 45 Z" fill="#2d1608" stroke="#170a03" stroke-width="2"/>
+                <path d="M50 20 Q60 30 70 20" stroke="#170a03" stroke-width="3" fill="none" opacity="0.6"/>
+                <path d="M41 45 L79 45" stroke="#c06c30" stroke-width="5"/>
+                <path d="M10 50 C30 75, 90 75, 110 50 C115 45, 105 35, 90 45 C75 55, 45 55, 30 45 C15 35, 5 45, 10 50 Z" fill="#3b1f0f" stroke="#170a03" stroke-width="2"/>
+            </svg>
+        `;
+
+        function spawnFallingHat() {
+            if(!hatContainer) return;
+            const hat = document.createElement('div');
+            hat.innerHTML = cowboyHatSVG;
+            hat.style.position = 'absolute';
+            // Ahora nacen desde arriba
+            hat.style.top = '-100px';
+            hat.style.left = (Math.random() * 90) + 'vw';
+            hat.style.filter = 'drop-shadow(0 15px 15px rgba(0,0,0,0.8))';
+            
+            const duration = Math.random() * 4 + 5;
+            const drift = (Math.random() * 300 - 150) + 'px'; // Caída con viento hacia los lados
+            const rotation = (Math.random() * 360) + 'deg';
+            
+            // Animación CSS dinámica de caída
+            hat.style.transition = `transform ${duration}s ease-in, opacity ${duration}s ease-in-out`;
+            hat.style.transform = `translate(0, 0) rotate(0deg)`;
+            
+            hatContainer.appendChild(hat);
+            
+            // Disparar caída
+            setTimeout(() => {
+                hat.style.transform = `translate(${drift}, 110vh) rotate(${rotation})`;
+            }, 50);
+
+            setTimeout(() => { hat.remove(); }, duration * 1000);
+        }
+
+        function tossFallingHats(count) {
+            for(let i=0; i<count; i++) {
+                setTimeout(spawnFallingHat, i * 200);
+            }
+        }
+
+        /* ANIMACIONES: POLVO Y CHISPAS EN CANVAS */
+        const canvas = document.getElementById('desert-dust-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Polvo base constante
+        for(let i=0; i<80; i++) {
+            particles.push(createParticle(false));
+        }
+
+        function createParticle(isSpark) {
+            return {
+                x: Math.random() * canvas.width,
+                y: isSpark ? canvas.height + 10 : Math.random() * canvas.height,
+                size: isSpark ? Math.random() * 3 + 1 : Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: isSpark ? -(Math.random() * 4 + 2) : (Math.random() - 0.5) * 1,
+                life: isSpark ? 1 : Math.random(),
+                decay: isSpark ? Math.random() * 0.02 + 0.01 : 0,
+                color: isSpark ? (Math.random() > 0.5 ? '#e69d65' : '#c06c30') : '#d6c6b3'
+            };
+        }
+
+        function burstCampfireSparks() {
+            for(let i=0; i<40; i++) {
+                particles.push(createParticle(true));
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let i=particles.length-1; i>=0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if(p.decay > 0) { // Si es chispa
+                    p.life -= p.decay;
+                    p.x += Math.sin(p.y * 0.05) * 2; // Movimiento zig-zag de fuego
+                    if(p.life <= 0) { particles.splice(i, 1); continue; }
+                } else { // Si es polvo
+                    if(p.x < 0) p.x = canvas.width;
+                    if(p.x > canvas.width) p.x = 0;
+                    if(p.y < 0) p.y = canvas.height;
+                    if(p.y > canvas.height) p.y = 0;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.decay > 0 ? `rgba(230, 157, 101, ${p.life})` : `rgba(214, 198, 179, 0.4)`;
+                
+                if(p.decay > 0) {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = p.color;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.fill();
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        /* RSVP Form (Simulado para catálogo) */
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.style.display = 'none';
+            document.getElementById('rsvp-success').style.display = 'block';
+            triggerStampede(); // Explosión sorpresa al confirmar
+            tossFallingHats(5);
+        });
+
+    </script>
+</body>
+</html>
